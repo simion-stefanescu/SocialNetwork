@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
+
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
