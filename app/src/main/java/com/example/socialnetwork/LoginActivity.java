@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
          //Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1048588802518-d1uqp028dcnj9ela3fqrnogkr6172ngu.apps.googleusercontent.com")
+                .requestIdToken("1048588802518-pirru2i7rdkfdn2ceqgk89c689ge39b8.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        //mGoogleSignInClient.connect();
     }
 
 
