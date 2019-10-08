@@ -291,9 +291,21 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void SendUserToProfileActivity() {
+        Intent loginIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
+    }
+
     private void SendUserToSettingsActivity() {
         Intent loginIntent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(loginIntent);
+    }
+
+    private void SendUserToFindFriendsActivity() {
+        Intent friendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(friendsIntent);
     }
 
 
@@ -309,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
     private void UserMenuSelector(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_profile:
+                SendUserToProfileActivity();
                 Toast.makeText(this,"Profile",Toast.LENGTH_SHORT).show();
                 break;
 
@@ -321,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_find_friends:
+                SendUserToFindFriendsActivity();
                 Toast.makeText(this,"Find Friends",Toast.LENGTH_SHORT).show();
                 break;
 
