@@ -57,7 +57,7 @@
             android:layout_toEndOf="@+id/search_box_input"
             android:background="@drawable/input"
             android:layout_toRightOf="@+id/search_box_input"
-            android:src="@drawable/find_people"/>
+            android:src="@drawable/search"/>
 
 
     </RelativeLayout>
