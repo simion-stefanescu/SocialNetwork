@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorProfile"
+    android:layout_height="match_parent"
+    tools:context=".FindFriendsActivity">
+
+    <include
+        android:id="@+id/find_friends_appbar_layout"
+        layout = "@layout/app_bar_layout">
+    </include>
+
+    <RelativeLayout
+        android:id="@+id/myLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/find_friends_appbar_layout">
+    <TextView
+        android:id="@+id/simpleTextID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_alignParentEnd="true"
+        android:text="Search for pople form school, college or university"
+        android:textColor="@android:color/background_light"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true" />
+
+        <EditText
+            android:id="@+id/search_box_input"
+            android:layout_width="280dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/simpleTextID"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input"
+            android:ems="10"
+            android:hint="Search..."
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:textColor="@color/colorProfile"
+            android:textColorHint="@color/colorProfile"
+            />
+
+        <ImageButton
+            android:id="@+id/search_people_friends_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/simpleTextID"
+            android:layout_toEndOf="@+id/search_box_input"
+            android:background="@drawable/input"
+            android:layout_toRightOf="@+id/search_box_input"
+            android:src="@drawable/search"/>
+
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_result_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/myLayout"
+        android:layout_margin="10dp"
+        />
+
+
+</RelativeLayout>
