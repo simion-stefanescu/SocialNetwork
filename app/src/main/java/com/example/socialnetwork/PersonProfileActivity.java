@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.os.Bundle;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,35 +16,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends AppCompatActivity {
+public class PersonProfileActivity extends AppCompatActivity {
 
     private TextView userName, userProfileName, userStatus, userCountry, userGender, userRelation, userDOB;
     private CircleImageView userProfileImage;
+    private Button SendFriendRequestButton, DeclineFriendRequestButton;
 
-    private DatabaseReference profileUserRef;
+    private DatabaseReference profileUserRef, UsersRef;
     private FirebaseAuth mAuth;
+    private String senderUserId, receiverUserId;
 
-    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_person_profile);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUserId = mAuth.getCurrentUser().getUid();
+        receiverUserId = getIntent().getExtras().get("visit_user_id").toString();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
+        InitializeFields();
 
-        userName = (TextView) findViewById(R.id.my_username);
-        userProfileName = (TextView) findViewById(R.id.my_profile_fullname);
-        userStatus = (TextView) findViewById(R.id.my_profile_status);
-        userCountry = (TextView) findViewById(R.id.my_country);
-        userGender = (TextView) findViewById(R.id.my_gender);
-        userRelation = (TextView) findViewById(R.id.my_username);
-        userDOB = (TextView) findViewById(R.id.my_dob);
-        userProfileImage = (CircleImageView) findViewById(R.id.my_profile_pic);
-
-        profileUserRef.addValueEventListener(new ValueEventListener() {
+        UsersRef.child(receiverUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -78,5 +72,20 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void InitializeFields() {
+
+        userName = (TextView) findViewById(R.id.person_username);
+        userProfileName = (TextView) findViewById(R.id.person_profile_fullname);
+        userStatus = (TextView) findViewById(R.id.person_profile_status);
+        userCountry = (TextView) findViewById(R.id.person_country);
+        userGender = (TextView) findViewById(R.id.person_gender);
+        userRelation = (TextView) findViewById(R.id.person_username);
+        userDOB = (TextView) findViewById(R.id.person_dob);
+        userProfileImage = (CircleImageView) findViewById(R.id.person_profile_pic);
+        SendFriendRequestButton = (Button) findViewById(R.id.person_send_friend_request_btn);
+        DeclineFriendRequestButton = (Button) findViewById(R.id.person_decline_friend_request_btn);
+
     }
 }

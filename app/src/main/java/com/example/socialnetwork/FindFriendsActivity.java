@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -78,12 +79,23 @@ public class FindFriendsActivity extends AppCompatActivity {
 
                 ) {
                     @Override
-                    protected void populateViewHolder(FindFriendsViewHolder findFriendsViewHolder, FindFriends model, int i) {
+                    protected void populateViewHolder(FindFriendsViewHolder findFriendsViewHolder, FindFriends model, final int i) {
 
                         findFriendsViewHolder.setFullname(model.getFullname());
                         findFriendsViewHolder.setStatus(model.getStatus());
                         findFriendsViewHolder.setProfileImage(getApplicationContext(), model.getProfileimage());
 
+
+                        findFriendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String visit_user_id = getRef(i).getKey();
+
+                                Intent profileIntent = new Intent(FindFriendsActivity.this, PersonProfileActivity.class);
+                                profileIntent.putExtra("visit_user_id", visit_user_id);
+                                startActivity(profileIntent);
+                            }
+                        });
                     }
                 };
 
