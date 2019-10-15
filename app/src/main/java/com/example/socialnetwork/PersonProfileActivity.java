@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class PersonProfileActivity extends AppCompatActivity {
 
     private DatabaseReference profileUserRef, UsersRef;
     private FirebaseAuth mAuth;
-    private String senderUserId, receiverUserId;
+    private String senderUserId, receiverUserId, CURRENT_STATE;
 
 
     @Override
@@ -35,6 +36,7 @@ public class PersonProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         receiverUserId = getIntent().getExtras().get("visit_user_id").toString();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        senderUserId = mAuth.getCurrentUser().getUid();
 
         InitializeFields();
 
@@ -72,6 +74,26 @@ public class PersonProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        DeclineFriendRequestButton.setVisibility(View.INVISIBLE);
+        DeclineFriendRequestButton.setEnabled(false);
+
+        if(!senderUserId.equals(receiverUserId)){
+
+            SendFriendRequestButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SendFriendRequestButton.setEnabled(false);
+                }
+            });
+
+        }else {
+
+            DeclineFriendRequestButton.setVisibility(View.INVISIBLE);
+            SendFriendRequestButton.setVisibility(View.INVISIBLE);
+
+        }
+
     }
 
     private void InitializeFields() {
@@ -86,6 +108,7 @@ public class PersonProfileActivity extends AppCompatActivity {
         userProfileImage = (CircleImageView) findViewById(R.id.person_profile_pic);
         SendFriendRequestButton = (Button) findViewById(R.id.person_send_friend_request_btn);
         DeclineFriendRequestButton = (Button) findViewById(R.id.person_decline_friend_request_btn);
+        CURRENT_STATE = "not friends";
 
     }
 }
