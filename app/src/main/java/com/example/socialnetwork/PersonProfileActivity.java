@@ -245,6 +245,29 @@ public class PersonProfileActivity extends AppCompatActivity {
                         DeclineFriendRequestButton.setEnabled(true);
 
                     }
+                }else {
+
+                    FriendsRef.child(senderUserId)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.hasChild(receiverUserId)){
+
+                                        CURRENT_STATE = "friends";
+                                        SendFriendRequestButton.setText("Unfriend this person");
+
+                                        DeclineFriendRequestButton.setVisibility(View.INVISIBLE);
+                                        DeclineFriendRequestButton.setEnabled(false);
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                 }
             }
 
