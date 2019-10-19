@@ -1,12 +1,15 @@
 package com.example.socialnetwork;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -78,6 +81,44 @@ public class FriendsActivity extends AppCompatActivity {
 
                             friendsViewHolder.setFullname(userName);
                             friendsViewHolder.setProfileImage(getApplicationContext(), profileImage);
+
+                            friendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    CharSequence options[] = new CharSequence[]{
+
+                                            userName + "'s profile",
+                                            "Send Message"
+
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(FriendsActivity.this);
+                                    builder.setTitle("Select options");
+
+                                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            if(which == 0){
+
+                                                Intent profileIntent = new Intent(FriendsActivity.this, PersonProfileActivity.class);
+                                                profileIntent.putExtra("visit_user_id", userIDs);
+                                                startActivity(profileIntent);
+
+                                            }if(which == 1){
+
+
+                                                Intent chatIntent = new Intent(FriendsActivity.this, ChatActivity.class);
+                                                chatIntent.putExtra("visit_user_id", userIDs);
+                                                chatIntent.putExtra("userName", userName);
+                                                startActivity(chatIntent);
+
+                                            }
+
+                                        }
+                                    });
+                                    builder.show();
+                                }
+                            });
                         }
 
                     }
