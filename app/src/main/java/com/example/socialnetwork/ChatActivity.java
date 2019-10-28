@@ -1,8 +1,10 @@
 package com.example.socialnetwork;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,8 +32,10 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +47,9 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton SendMessageButton, SendImageFileButon;
     private EditText userMessageInput;
     private RecyclerView userMesaggesList;
+    private final List<Messages> messagesList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private MessagesAdapter messagesAdapter;
 
     private String messageReceiverID, messageReceiverName, messageSenderID, saveCurrentDate, saveCurrentTime;
 
@@ -71,6 +79,47 @@ public class ChatActivity extends AppCompatActivity {
                 SendMessage();
             }
         });
+
+        FetchMessages();
+    }
+
+    private void FetchMessages() {
+
+        RootRef.child("Messages").child(messageSenderID).child(messageReceiverID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                if(dataSnapshot.exists()){
+
+                    Messages messages = dataSnapshot.getValue(Messages.class);
+                    messagesList.add(messages);
+                    messagesAdapter.notifyDataSetChanged();
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void SendMessage() {
@@ -116,16 +165,15 @@ public class ChatActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
 
                         Toast.makeText(ChatActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
 
                     }else {
 
                         String message = task.getException().getMessage();
                         Toast.makeText(ChatActivity.this, "Error:", Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
 
                     }
-
-                    userMessageInput.setText("");
-
                 }
             });
         }
@@ -174,6 +222,12 @@ public class ChatActivity extends AppCompatActivity {
         userMessageInput = (EditText) findViewById(R.id.input_message);
 
 
+        messagesAdapter = new MessagesAdapter(messagesList);
+        userMesaggesList = (RecyclerView) findViewById(R.id.messages_list_users);
+        linearLayoutManager = new LinearLayoutManager(this);
+        userMesaggesList.setHasFixedSize(true);
+        userMesaggesList.setLayoutManager(linearLayoutManager);
+        userMesaggesList.setAdapter(messagesAdapter);
 
     }
 }
