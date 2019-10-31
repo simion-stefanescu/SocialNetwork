@@ -24,12 +24,13 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView userName, userProfileName, userStatus, userCountry, userGender, userRelation, userDOB;
     private CircleImageView userProfileImage;
 
-    private DatabaseReference profileUserRef;
+    private DatabaseReference profileUserRef, FriendsRef, PostsRef;
     private FirebaseAuth mAuth;
     private Button MyPosts;
     private Button MyFriends;
 
     private String currentUserId;
+    private int countFriends, countPosts;
 
 
     @Override
@@ -40,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
 
+        FriendsRef = FirebaseDatabase.getInstance().getReference().child("Friends");
+        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         userName = (TextView) findViewById(R.id.my_username);
         userProfileName = (TextView) findViewById(R.id.my_profile_fullname);
@@ -72,6 +75,69 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+
+        FriendsRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+
+                    countFriends = (int) dataSnapshot.getChildrenCount();
+                    if(countFriends == 1){
+                        MyFriends.setText(Integer.toString(countFriends) + " Friend");
+                    }else {
+
+                    MyFriends.setText(Integer.toString(countFriends) + " Friends");
+                    }
+
+                }else {
+
+                    MyFriends.setText("0 Friends");
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        PostsRef.orderByChild("uid")
+                .startAt(currentUserId).endAt(currentUserId + "\uf8ff").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+
+                    countPosts = (int) dataSnapshot.getChildrenCount();
+                    if(countPosts == 1){
+
+                        MyPosts.setText(Integer.toString(countPosts )+ " Post");
+
+                    }else {
+
+                        MyPosts.setText(Integer.toString(countPosts) + " Posts");
+                    }
+
+                }else {
+
+                    MyPosts.setText("0 Posts");
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         profileUserRef.addValueEventListener(new ValueEventListener() {
             @Override
