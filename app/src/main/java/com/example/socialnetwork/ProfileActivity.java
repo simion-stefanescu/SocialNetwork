@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,8 +26,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private DatabaseReference profileUserRef;
     private FirebaseAuth mAuth;
+    private Button MyPosts;
+    private Button MyFriends;
 
     private String currentUserId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,29 @@ public class ProfileActivity extends AppCompatActivity {
         userRelation = (TextView) findViewById(R.id.my_username);
         userDOB = (TextView) findViewById(R.id.my_dob);
         userProfileImage = (CircleImageView) findViewById(R.id.my_profile_pic);
+        MyFriends = (Button) findViewById(R.id.my_friends_button);
+        MyPosts = (Button) findViewById(R.id.my_post_button);
+        profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+
+
+        MyFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SendUserToFriendsActivity();
+
+            }
+        });
+
+
+        MyPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SendUserToPostsActivity();
+
+            }
+        });
 
         profileUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -78,5 +107,19 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void SendUserToFriendsActivity() {
+
+        Intent friendsIntent = new Intent(ProfileActivity.this, FriendsActivity.class);
+        startActivity(friendsIntent);
+
+    }
+
+    private void SendUserToPostsActivity() {
+
+        Intent friendsIntent = new Intent(ProfileActivity.this, MyPostsActivity.class);
+        startActivity(friendsIntent);
+
     }
 }
