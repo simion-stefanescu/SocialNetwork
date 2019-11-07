@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
 
-                        SendUserToSetupActivity();
+                      SendVerificationEmail();
 
                         Toast.makeText(RegisterActivity.this, "Authenthification Succesfull", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();
@@ -115,9 +115,40 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    private void SendUserToSetupActivity() {
+    private void SendVerificationEmail() {
 
-        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user != null){
+
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+
+                    if(task.isSuccessful()){
+
+                        Toast.makeText(RegisterActivity.this, "Verify yout Email Address", Toast.LENGTH_SHORT).show();
+                        SendUserToLoginActivity();
+                        mAuth.signOut();
+
+                    }else {
+
+                        String error = task.getException().getMessage();
+                        Toast.makeText(RegisterActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                    }
+
+                }
+            });
+
+        }
+
+    }
+
+
+    private void SendUserToLoginActivity() {
+
+        Intent setupIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(setupIntent);
         finish();
